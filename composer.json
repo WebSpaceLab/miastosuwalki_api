@@ -21,6 +21,7 @@
         "symfony/messenger": "6.4.*",
         "symfony/monolog-bundle": "^3.10",
         "symfony/runtime": "6.4.*",
+        "symfony/security-bundle": "6.4.*",
         "symfony/yaml": "6.4.*"
     },
     "config": {
