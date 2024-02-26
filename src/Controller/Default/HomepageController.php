@@ -6,6 +6,7 @@ use App\Controller\AbstractAPIController;
 use App\Repository\AboutRepository;
 use App\Repository\ArticleRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('', name: 'app_homepage')]
@@ -15,9 +16,7 @@ class HomepageController extends AbstractAPIController
     #[Route('', name: ':index', methods: ['GET'])]
     public function index()
     {
-        return $this->render('homepage/index.html.twig', [
-            'controller_name' => 'HomepageController',
-        ]);
+        return new Response('<html><body><h1>Homepage index.</h1></body></html>');
     }
 
     #[Route('/api/homepage', name: ':home', methods: ['GET'])]
