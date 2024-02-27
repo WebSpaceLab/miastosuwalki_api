@@ -24,7 +24,7 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
-    public function getWithSearchQueryBuilder(?string $term, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC', ?string $status = 'false', ?string $month): DoctrineQueryBuilder
+    public function getWithSearchQueryBuilder(?string $term, ?string $month, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC', ?string $status = 'false'): DoctrineQueryBuilder
     {
         $qb = $this->createQueryBuilder('article')
             ->andWhere('article.isDelete = false');
@@ -51,7 +51,7 @@ class ArticleRepository extends ServiceEntityRepository
         return $qb->orderBy('article.' . $orderBy , $orderDir);
     }
 
-    public function getWithSearchQueryBuilderOnlyPublished(?string $term, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC', ?string $month): DoctrineQueryBuilder
+    public function getWithSearchQueryBuilderOnlyPublished(?string $term, ?string $month, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC'): DoctrineQueryBuilder
     {
         $qb = $this->createQueryBuilder('article')
             ->andWhere('article.isDelete = false')
@@ -74,7 +74,7 @@ class ArticleRepository extends ServiceEntityRepository
         return $qb->orderBy('article.' . $orderBy , $orderDir);
     }
 
-    public function getWithSearchQueryBuilderOnlyPublishedForCategory(Category $category, ?string $term, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC', ?string $month): DoctrineQueryBuilder
+    public function getWithSearchQueryBuilderOnlyPublishedForCategory(Category $category, ?string $term, ?string $month, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC'): DoctrineQueryBuilder
     {
         $qb = $this->createQueryBuilder('article')
             ->andWhere('article.isDelete = false')

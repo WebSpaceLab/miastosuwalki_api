@@ -22,7 +22,7 @@ class PriceRepository extends ServiceEntityRepository
         parent::__construct($registry, Price::class);
     }
 
-    public function getWithSearchQueryBuilder(?string $term, ?string $orderBy = 'createdAt', ?string $orderDir = 'ASC', ?string $status = 'false', ?string $month): DoctrineQueryBuilder
+    public function getWithSearchQueryBuilder(?string $term, ?string $month, ?string $orderBy = 'createdAt', ?string $orderDir = 'ASC', ?string $status = 'false'): DoctrineQueryBuilder
     {
         $qb = $this->createQueryBuilder('price')
             ->andWhere('price.isDelete = false');

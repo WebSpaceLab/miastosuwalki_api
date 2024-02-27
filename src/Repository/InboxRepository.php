@@ -23,7 +23,7 @@ class InboxRepository extends ServiceEntityRepository
     }
 
     
-    public function getWithSearchQueryBuilder(?string $term, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC', ?string $read = 'false', ?string $month): DoctrineQueryBuilder
+    public function getWithSearchQueryBuilder(?string $term, ?string $month, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC', ?string $read = 'false'): DoctrineQueryBuilder
     {
         $qb = $this->createQueryBuilder('inbox')
             ->andWhere('inbox.isDelete = false');

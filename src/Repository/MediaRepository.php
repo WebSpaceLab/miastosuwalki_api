@@ -24,7 +24,7 @@ class MediaRepository extends ServiceEntityRepository
         parent::__construct($registry, Media::class);
     }
 
-    public function getWithSearchQueryBuilder(?string $term, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC', ?string $fileType = 'image', ?string $month): DoctrineQueryBuilder
+    public function getWithSearchQueryBuilder(?string $term, ?string $month, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC', ?string $fileType = 'image'): DoctrineQueryBuilder
     {
         $qb = $this->createQueryBuilder('media');
 
@@ -51,7 +51,7 @@ class MediaRepository extends ServiceEntityRepository
         return $qb->orderBy('media.' . $orderBy , $orderDir);
     }
 
-    public function getWithSearchQueryBuilderForUser(?string $term, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC', ?string $fileType, ?string $month, ?int $userId): DoctrineQueryBuilder
+    public function getWithSearchQueryBuilderForUser(?string $term, ?string $fileType, ?string $month, ?int $userId, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC'): DoctrineQueryBuilder
     {
         $qb = $this->createQueryBuilder('media')
             ->andWhere('media.isDelete = false')

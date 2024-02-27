@@ -18,11 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Janwebdev\ImageBundle\Image;
-use Intervention\Image\ImageManagerStatic;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-// use Intervention\Image\ImageManagerStatic as Image;
 
 #[isGranted('ROLE_USER')]
 #[Route('/api/media', name: 'app_media')]
@@ -74,7 +71,7 @@ class MediaController extends AbstractAPIController
             $media->setMimeType($file->getMimeType());
             $media->setSize($file->getSize());
 
-            $filename = $uploaderHelper->uploadImage($file, $this->getUploadsDir('images', $user));
+            $filename = $uploaderHelper->uploadImage($file, $this->getUploadsDir($user, 'images'));
 
             if(!$filename) {
                 return $this->json([
@@ -204,7 +201,7 @@ class MediaController extends AbstractAPIController
             $media->setMimeType($file->getMimeType());
             $media->setSize($file->getSize());
             
-            $filename = $uploaderHelper->uploadImage($file, $this->getUploadsDir('images', $user));
+            $filename = $uploaderHelper->uploadImage($file, $this->getUploadsDir($user, 'images'));
             
             if(!$filename) {
                 return $this->json([
@@ -297,7 +294,7 @@ class MediaController extends AbstractAPIController
 
         try {
             $filesystem->remove(
-                $this->getUploadsDir('images', $this->getUser()) . $media->getFileName()
+                $this->getUploadsDir($this->getUser(), 'images') . $media->getFileName()
             );
         } catch (\Exception $e) {
             return $this->json([
@@ -327,61 +324,8 @@ class MediaController extends AbstractAPIController
         ], Response::HTTP_OK);
     }
 
-    private function getUploadsDir(string $folder = 'images', User $user)
+    private function getUploadsDir(User $user, string $folder = 'images')
     {
         return $this->getParameter('uploads_dir') . '/' . $folder . '/'. $user->getId() . '/';
-    }
-
-    // TODO: add cropper
-    #[Route('/with-cropper', name: ':cropper', methods: ['POST'])]
-    public function createWithCropper(ImageManagerStatic $imageManager, Request $request, MediaRepository $mediaRepository, #[CurrentUser()] User $user, UploaderHelper $uploaderHelper): JsonResponse
-    {
-        $file = $request->files->get('image');
-        $this->validate([
-            'image' => [
-                new NotBlank(),
-                new File()
-            ],
-        ], $file);
-
-
-
-        if($file) {
-            $media = new Media();
-            $media->setName($file->getClientOriginalName());
-            $media->setMimeType($file->getMimeType());
-            $media->setSize($file->getSize());
-            $media->setAuthor($user);
-
-            $filename = $uploaderHelper->createdFileName($file);
-            $image = new Image($imageManager, ['driver' => 'gd']);
-            $img = $image->create($this->getUploadsDir('images', $this->getUser()) . $filename);
-
-            $croppedImage = $img->crop(
-                $request->request->get('width'),
-                $request->request->get('height'),
-                $request->request->get('left'),
-                $request->request->get('top'),
-            );
-
-            $croppedImage->save($this->getUploadsDir('images', $this->getUser()) . $filename);
-            
-            $media->setFileName($filename);
-            $media->setFilePath('/uploads/' . $filename);
-
-
-            $mediaRepository->save($media, true);
-
-            $this->flash('The file has been added.');
-
-            return $this->response(['media' => $media], ['media:read']);
-        }
-
-        return $this->json([
-            'flash' => [
-                'message' => 'Coś poszło nie tak. Plik nie został przesłany.',
-                'type' => 'error'
-            ],
-        ], Response::HTTP_BAD_REQUEST);
     }
 }

@@ -24,7 +24,7 @@ class HeroRepository extends ServiceEntityRepository
         parent::__construct($registry, Hero::class);
     }
 
-    public function getWithSearchQueryBuilder(?string $term, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC', ?string $status = 'false', ?string $month): DoctrineQueryBuilder
+    public function getWithSearchQueryBuilder(?string $term, ?string $month, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC', ?string $status = 'false'): DoctrineQueryBuilder
     {
         $qb = $this->createQueryBuilder('hero')
             ->andWhere('hero.isDelete = false');

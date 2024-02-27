@@ -24,7 +24,7 @@ class GalleryRepository extends ServiceEntityRepository
         parent::__construct($registry, Gallery::class);
     }
 
-    public function getWithSearchQueryBuilder(?string $term, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC', ?string $status = 'false', ?string $month): DoctrineQueryBuilder
+    public function getWithSearchQueryBuilder(?string $term, ?string $month, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC', ?string $status = 'false'): DoctrineQueryBuilder
     {
         $qb = $this->createQueryBuilder('gallery')
             ->andWhere('gallery.isDelete = false');
@@ -51,7 +51,7 @@ class GalleryRepository extends ServiceEntityRepository
         return $qb->orderBy('gallery.' . $orderBy , $orderDir);
     }
 
-    public function getWithSearchQueryBuilderOnlyPublished(?string $term, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC', ?string $month): DoctrineQueryBuilder
+    public function getWithSearchQueryBuilderOnlyPublished(?string $term, ?string $month, ?string $orderBy = 'createdAt', ?string $orderDir = 'DESC'): DoctrineQueryBuilder
     {
         $qb = $this->createQueryBuilder('gallery')
             ->andWhere('gallery.isDelete = false')
